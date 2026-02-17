@@ -1,11 +1,3 @@
-User-agent: facebookexternalhit
-Allow: /storage/v1/object/public/product-images/
-Disallow: /
-
-User-agent: Facebot
-Allow: /storage/v1/object/public/product-images/
-Disallow: /
-
 User-agent: *
 Disallow: /auth/
 Disallow: /rest/
