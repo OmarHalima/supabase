@@ -297,6 +297,46 @@ services:
           status_code: 200
           content_type: text/plain; charset=utf-8
           body: |
+            User-agent: facebookexternalhit
+            Allow: /storage/v1/object/public/product-images/
+            Disallow: /auth/
+            Disallow: /rest/
+            Disallow: /postgres/
+            Disallow: /realtime/
+            Disallow: /functions/
+            Disallow: /analytics/
+            Disallow: /graphql/
+
+            User-agent: Facebot
+            Allow: /storage/v1/object/public/product-images/
+            Disallow: /auth/
+            Disallow: /rest/
+            Disallow: /postgres/
+            Disallow: /realtime/
+            Disallow: /functions/
+            Disallow: /analytics/
+            Disallow: /graphql/
+
+            User-agent: facebookcatalog
+            Allow: /storage/v1/object/public/product-images/
+            Disallow: /auth/
+            Disallow: /rest/
+            Disallow: /postgres/
+            Disallow: /realtime/
+            Disallow: /functions/
+            Disallow: /analytics/
+            Disallow: /graphql/
+
+            User-agent: WhatsApp
+            Allow: /storage/v1/object/public/product-images/
+            Disallow: /auth/
+            Disallow: /rest/
+            Disallow: /postgres/
+            Disallow: /realtime/
+            Disallow: /functions/
+            Disallow: /analytics/
+            Disallow: /graphql/
+
             User-agent: *
             Disallow: /auth/
             Disallow: /rest/
