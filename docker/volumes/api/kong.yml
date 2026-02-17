@@ -295,7 +295,6 @@ services:
       - name: request-termination
         config:
           status_code: 200
-          content_type: text/plain; charset=utf-8
           message: |
             User-agent: facebookexternalhit
             Disallow:
