@@ -282,13 +282,15 @@ services:
       #      - ::1
       #    deny: []
  
-  ## robots.txt - allow Meta/WhatsApp media fetch while blocking APIs
+  ## robots.txt - public-site policy via Kong
   - name: robots-txt
-    _comment: 'Serve robots.txt so Meta/WhatsApp and Facebook bots can download media from /storage/v1/object/public/product-images/'
+    _comment: 'Serve robots.txt so crawlers can index public pages and assets while blocking internal APIs; storage product images remain crawlable.'
     url: http://studio:3000/
     routes:
       - name: robots-txt-route
         strip_path: false
+        hosts:
+          - "$KONG_PUBLIC_HOST"
         paths:
           - /robots.txt
     plugins:
@@ -297,22 +299,6 @@ services:
           status_code: 200
           content_type: text/plain; charset=utf-8
           body: |
-            User-agent: facebookexternalhit
-            Allow: /storage/v1/object/public/product-images/
-            Disallow: /
-
-            User-agent: Facebot
-            Allow: /storage/v1/object/public/product-images/
-            Disallow: /
-
-            User-agent: facebookcatalog
-            Allow: /storage/v1/object/public/product-images/
-            Disallow: /
-
-            User-agent: WhatsApp
-            Allow: /storage/v1/object/public/product-images/
-            Disallow: /
-
             User-agent: *
             Disallow: /auth/
             Disallow: /rest/
