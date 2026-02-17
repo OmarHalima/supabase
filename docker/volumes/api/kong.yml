@@ -299,51 +299,17 @@ services:
           body: |
             User-agent: facebookexternalhit
             Allow: /
-            Allow: /storage/v1/object/public/product-images/
-            Disallow: /auth/
-            Disallow: /rest/
-            Disallow: /postgres/
-            Disallow: /realtime/
-            Disallow: /functions/
-            Disallow: /analytics/
-            Disallow: /graphql/
 
             User-agent: Facebot
             Allow: /
-            Allow: /storage/v1/object/public/product-images/
-            Disallow: /auth/
-            Disallow: /rest/
-            Disallow: /postgres/
-            Disallow: /realtime/
-            Disallow: /functions/
-            Disallow: /analytics/
-            Disallow: /graphql/
 
             User-agent: facebookcatalog
             Allow: /
-            Allow: /storage/v1/object/public/product-images/
-            Disallow: /auth/
-            Disallow: /rest/
-            Disallow: /postgres/
-            Disallow: /realtime/
-            Disallow: /functions/
-            Disallow: /analytics/
-            Disallow: /graphql/
 
             User-agent: WhatsApp
             Allow: /
-            Allow: /storage/v1/object/public/product-images/
-            Disallow: /auth/
-            Disallow: /rest/
-            Disallow: /postgres/
-            Disallow: /realtime/
-            Disallow: /functions/
-            Disallow: /analytics/
-            Disallow: /graphql/
 
             User-agent: *
-            Allow: /
-            Allow: /storage/v1/object/public/product-images/
             Disallow: /auth/
             Disallow: /rest/
             Disallow: /postgres/
@@ -351,6 +317,7 @@ services:
             Disallow: /functions/
             Disallow: /analytics/
             Disallow: /graphql/
+            Allow: /storage/v1/object/public/product-images/
 
   ## Protected Dashboard - catch all remaining routes
   - name: dashboard
