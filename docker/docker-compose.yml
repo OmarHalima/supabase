@@ -7,12 +7,20 @@
 
 name: supabase
 
+networks:
+  default:
+    driver: bridge
+    enable_ipv6: false
+
 services:
 
   studio:
     container_name: supabase-studio
     image: supabase/studio:2026.02.16-sha-26c615c
     restart: unless-stopped
+    # Port mapping for Studio - uncomment if you need direct access to Studio
+    # ports:
+    #   - "3000:3000"
     healthcheck:
       test:
         [
@@ -219,7 +227,7 @@ services:
       timeout: 5s
       interval: 30s
       retries: 3
-      start_period: 10s
+      start_period: 30s
     environment:
       PORT: 4000
       DB_HOST: ${POSTGRES_HOST}
@@ -404,6 +412,12 @@ services:
     container_name: supabase-db
     image: supabase/postgres:15.8.1.085
     restart: unless-stopped
+    # Add network aliases to ensure proper DNS resolution
+    networks:
+      default:
+        aliases:
+          - db
+          - supabase-db
     volumes:
       - ./volumes/db/realtime.sql:/docker-entrypoint-initdb.d/migrations/99-realtime.sql:Z
       # Must be superuser to create event trigger
@@ -463,6 +477,8 @@ services:
     restart: unless-stopped
     volumes:
       - ./volumes/logs/vector.yml:/etc/vector/vector.yml:ro,z
+      # Docker socket mount - comment out if EasyPanel doesn't allow Docker socket access
+      # This is needed for Vector to collect Docker container logs
       - ${DOCKER_SOCKET_LOCATION}:/var/run/docker.sock:ro,z
     healthcheck:
       test:
@@ -484,6 +500,8 @@ services:
         "--config",
         "/etc/vector/vector.yml"
       ]
+    # Security option - may need to be removed in some deployment environments
+    # Comment out if EasyPanel reports security policy violations
     security_opt:
       - "label=disable"
 
@@ -493,6 +511,8 @@ services:
     image: supabase/supavisor:2.7.4
     restart: unless-stopped
     ports:
+      # Note: Exposing PostgreSQL port through pooler - use a different port if db service also exposes 5432
+      # Comment out the line below if you encounter port conflicts
       - ${POSTGRES_PORT}:5432
       - ${POOLER_PROXY_PORT_TRANSACTION}:6543
     volumes:
