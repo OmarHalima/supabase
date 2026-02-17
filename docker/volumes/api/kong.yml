@@ -281,6 +281,33 @@ services:
       #      - 127.0.0.1
       #      - ::1
       #    deny: []
+ 
+  ## robots.txt - allow Meta/WhatsApp media fetch
+  - name: robots-txt
+    _comment: 'Serve robots.txt so Meta/WhatsApp can download media from /storage/v1/*'
+    url: http://studio:3000/
+    routes:
+      - name: robots-txt-route
+        strip_path: false
+        paths:
+          - /robots.txt
+    plugins:
+      - name: request-termination
+        config:
+          status_code: 200
+          content_type: text/plain; charset=utf-8
+          message: |
+            User-agent: facebookexternalhit
+            Disallow:
+
+            User-agent: facebookcatalog
+            Disallow:
+
+            User-agent: WhatsApp
+            Disallow:
+
+            User-agent: *
+            Disallow:
 
   ## Protected Dashboard - catch all remaining routes
   - name: dashboard
