@@ -282,9 +282,9 @@ services:
       #      - ::1
       #    deny: []
  
-  ## robots.txt - allow Meta/WhatsApp media fetch
+  ## robots.txt - allow Meta/WhatsApp media fetch while blocking APIs
   - name: robots-txt
-    _comment: 'Serve robots.txt so Meta/WhatsApp can download media from /storage/v1/*'
+    _comment: 'Serve robots.txt so Meta/WhatsApp and Facebook bots can download media from /storage/v1/object/public/product-images/'
     url: http://studio:3000/
     routes:
       - name: robots-txt-route
@@ -298,16 +298,30 @@ services:
           content_type: text/plain; charset=utf-8
           body: |
             User-agent: facebookexternalhit
-            Disallow:
+            Allow: /storage/v1/object/public/product-images/
+            Disallow: /
+
+            User-agent: Facebot
+            Allow: /storage/v1/object/public/product-images/
+            Disallow: /
 
             User-agent: facebookcatalog
-            Disallow:
+            Allow: /storage/v1/object/public/product-images/
+            Disallow: /
 
             User-agent: WhatsApp
-            Disallow:
+            Allow: /storage/v1/object/public/product-images/
+            Disallow: /
 
             User-agent: *
-            Disallow:
+            Disallow: /auth/
+            Disallow: /rest/
+            Disallow: /postgres/
+            Disallow: /realtime/
+            Disallow: /functions/
+            Disallow: /analytics/
+            Disallow: /graphql/
+            Allow: /storage/v1/object/public/product-images/
 
   ## Protected Dashboard - catch all remaining routes
   - name: dashboard
