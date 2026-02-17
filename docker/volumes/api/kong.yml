@@ -289,8 +289,6 @@ services:
     routes:
       - name: robots-txt-route
         strip_path: false
-        hosts:
-          - "$KONG_PUBLIC_HOST"
         paths:
           - /robots.txt
     plugins:
