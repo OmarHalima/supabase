@@ -4,6 +4,12 @@
 #   Stop:               docker compose down
 #   Destroy:            docker compose -f docker-compose.yml -f ./dev/docker-compose.dev.yml down -v --remove-orphans
 #   Reset everything:  ./reset.sh
+#
+# Network Aliases:
+#   All services have network aliases for both short names (e.g., "storage", "meta", "kong")
+#   and full names (e.g., "supabase-storage", "supabase-meta", "supabase-kong") to ensure
+#   compatibility with both docker-compose DNS (service names) and EasyPanel/Swarm deployments
+#   (container names). This allows Kong routing and Studio meta connections to work correctly.
 
 name: supabase
 
@@ -26,6 +32,11 @@ services:
     container_name: supabase-studio
     image: supabase/studio:2026.02.16-sha-26c615c
     restart: unless-stopped
+    networks:
+      default:
+        aliases:
+          - studio
+          - supabase-studio
     # Port mapping for Studio - uncomment if you need direct access to Studio
     # ports:
     #   - "3000:3000"
@@ -86,6 +97,11 @@ services:
     container_name: supabase-kong
     image: kong:2.8.1
     restart: unless-stopped
+    networks:
+      default:
+        aliases:
+          - kong
+          - supabase-kong
     ports:
       - ${KONG_HTTP_PORT}:8000/tcp
       - ${KONG_HTTPS_PORT}:8443/tcp
@@ -116,6 +132,11 @@ services:
     container_name: supabase-auth
     image: supabase/gotrue:v2.186.0
     restart: unless-stopped
+    networks:
+      default:
+        aliases:
+          - auth
+          - supabase-auth
     healthcheck:
       test:
         [
@@ -200,6 +221,11 @@ services:
     container_name: supabase-rest
     image: postgrest/postgrest:v14.5
     restart: unless-stopped
+    networks:
+      default:
+        aliases:
+          - rest
+          - supabase-rest
     depends_on:
       db:
         # Disable this if you are using an external Postgres database
@@ -225,6 +251,11 @@ services:
     container_name: realtime-dev.supabase-realtime
     image: supabase/realtime:v2.76.5
     restart: unless-stopped
+    networks:
+      default:
+        aliases:
+          - realtime
+          - realtime-dev.supabase-realtime
     depends_on:
       db:
         # Disable this if you are using an external Postgres database
@@ -266,6 +297,11 @@ services:
     container_name: supabase-storage
     image: supabase/storage-api:v1.37.8
     restart: unless-stopped
+    networks:
+      default:
+        aliases:
+          - storage
+          - supabase-storage
     volumes:
       - ./volumes/storage:/var/lib/storage:z
     healthcheck:
@@ -313,6 +349,11 @@ services:
     container_name: supabase-imgproxy
     image: darthsim/imgproxy:v3.30.1
     restart: unless-stopped
+    networks:
+      default:
+        aliases:
+          - imgproxy
+          - supabase-imgproxy
     volumes:
       - ./volumes/storage:/var/lib/storage:z
     healthcheck:
@@ -337,6 +378,11 @@ services:
     container_name: supabase-meta
     image: supabase/postgres-meta:v0.95.2
     restart: unless-stopped
+    networks:
+      default:
+        aliases:
+          - meta
+          - supabase-meta
     depends_on:
       db:
         # Disable this if you are using an external Postgres database
@@ -357,6 +403,11 @@ services:
     container_name: supabase-edge-functions
     image: supabase/edge-runtime:v1.70.3
     restart: unless-stopped
+    networks:
+      default:
+        aliases:
+          - functions
+          - supabase-edge-functions
     volumes:
       - ./volumes/functions:/home/deno/functions:Z
     depends_on:
@@ -382,6 +433,12 @@ services:
     container_name: supabase-analytics
     image: supabase/logflare:1.31.2
     restart: unless-stopped
+    networks:
+      default:
+        aliases:
+          - analytics
+          - logflare
+          - supabase-analytics
     # ports:
     #   - 4000:4000
     # Uncomment to use Big Query backend for analytics
