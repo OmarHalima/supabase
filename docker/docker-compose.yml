@@ -501,6 +501,8 @@ services:
       - ./volumes/db/roles.sql:/docker-entrypoint-initdb.d/init-scripts/99-roles.sql:Z
       # Initialize the database settings with JWT_SECRET and JWT_EXP
       - ./volumes/db/jwt.sql:/docker-entrypoint-initdb.d/init-scripts/99-jwt.sql:Z
+      # SSL configuration script - runs before Postgres starts
+      - ./volumes/db/ssl-config.sh:/docker-entrypoint-initdb.d/init-scripts/00-ssl-config.sh:Z
       # PGDATA directory is persisted between restarts
       - ./volumes/db/data:/var/lib/postgresql/data:Z
       # Changes required for internal supabase data such as _analytics
@@ -544,7 +546,13 @@ services:
         "-c",
         "config_file=/etc/postgresql/postgresql.conf",
         "-c",
-        "log_min_messages=fatal" # prevents Realtime polling queries from appearing in logs
+        "log_min_messages=fatal", # prevents Realtime polling queries from appearing in logs
+        "-c",
+        "ssl=on",
+        "-c",
+        "ssl_cert_file=/var/lib/postgresql/data/server.crt",
+        "-c",
+        "ssl_key_file=/var/lib/postgresql/data/server.key"
       ]
 
   vector:
